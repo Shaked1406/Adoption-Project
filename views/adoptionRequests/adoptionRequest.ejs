@@ -1,0 +1,103 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Available Dogs</title>
+<link rel="stylesheet" href="/css/adoptionRequest.css">
+
+</head>
+<body>
+
+<%- include('../includes/menu.ejs') %>
+
+
+  <main class="page">
+    <section class="adoption-card">
+      <div class="adoption-grid">
+        <!-- Left: content + form -->
+        <div>
+          <h1 class="adoption-title">We’re so happy you want to adopt!</h1>
+
+          <p class="adoption-subtitle">
+            Before getting started, please read:
+            <a href="/how-it-works">How it works</a>
+          </p>
+
+          <!-- Filled via JS (sessionStorage) when user selects a dog from Available Dogs -->
+          <p id="selectedDogPreview" class="adoption-subtitle" style="display:none;"></p>
+
+          <% if (successMsg) { %>
+            <div class="alert success"><%= successMsg %></div>
+          <% } %>
+
+          <% if (formError) { %>
+            <div class="alert error"><%= formError %></div>
+          <% } %>
+
+          <form id="adoptionForm" class="form" action="/adoption-request" method="POST" novalidate>
+            <input type="hidden" name="dog_id" id="dog_id" value="<%= values.dog_id %>"/>
+
+            <% if (errors.dog_id) { %>
+              <div class="fieldError"><%= errors.dog_id %></div>
+            <% } %>
+
+            <div class="field">
+              <label for="full_name">Name</label>
+              <input
+                type="text"
+                id="full_name"
+                name="full_name"
+                value="<%= values.full_name %>"
+                placeholder="For example: John Doe"
+              />
+              <div class="fieldError" id="err_full_name"><%= errors.full_name || "" %></div>
+            </div>
+
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value="<%= values.phone %>"
+                placeholder="For example: 0521234567"
+              />
+              <div class="fieldError" id="err_phone"><%= errors.phone || "" %></div>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input
+                type="text"
+                id="email"
+                name="email"
+                value="<%= values.email %>"
+                placeholder="name@example.com"
+              />
+              <div class="fieldError" id="err_email"><%= errors.email || "" %></div>
+            </div>
+
+            <div class="field">
+              <label for="additional_notes">Would you like to share anything else with us?</label>
+              <textarea
+                id="additional_notes"
+                name="additional_notes"
+                rows="4"
+                placeholder="Optional..."
+              ><%= values.additional_notes %></textarea>
+              <div class="fieldError" id="err_additional_notes"></div>
+            </div>
+
+            <button type="submit" class="btn">Submit Request</button>
+            <strong>Please notice: After submitting, the adoption center will contact you soon.</strong>
+          </form>
+        </div>
+
+        <aside class="adoption-aside">
+        <img src="/Images/dog-jumping.png" alt="Dog face wallpaper">
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/adoptionRequest.js"></script>
+</body>
+</html>

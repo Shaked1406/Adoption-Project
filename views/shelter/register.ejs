@@ -1,0 +1,54 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Register</title>
+<link rel="stylesheet" href="/css/shelterAuth.css">
+</head>
+
+<body>
+
+  <%- include('../includes/menu.ejs') %>
+
+  <main>
+    <section class="auth-card">
+      <h1>Shelter Registration</h1>
+
+      <% if (msg) { %>
+        <div class="msg"><%= msg %></div>
+      <% } %>
+
+      <form class="auth-form" action="/shelter/register" method="POST">
+        <label>
+          Email
+          <input type="email" name="email" required maxlength="255" placeholder="rep@shelter.org" />
+        </label>
+
+        <label>
+          Password
+          <input type="password" name="password" required maxlength="200" placeholder="Choose a strong password" />
+        </label>
+
+        <label>
+          Select Shelter
+          <select name="shelter_id" required>
+            <option value="">-- Select --</option>
+            <% shelters.forEach(s => { %>
+              <option value="<%= s.shelter_id %>"><%= s.name %></option>
+            <% }) %>
+          </select>
+        </label>
+
+        <div class="auth-actions">
+          <button class="btn primary-btn" type="submit">Create Account</button>
+          <a class="btn secondary-btn" href="/shelter/login">I already have an account</a>
+        </div>
+
+        <p class="auth-link">
+          By registering, you confirm you represent the selected shelter.<br>
+          Each Shelter has only one account.
+        </p>
+      </form>
+    </section>
+  </main>
+
+</body>
+</html>

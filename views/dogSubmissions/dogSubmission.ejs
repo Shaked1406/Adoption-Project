@@ -1,0 +1,175 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Available Dogs</title>
+<link rel="stylesheet" href="/css/dogSubmission.css">
+
+</head>
+<body>
+
+<%- include('../includes/menu.ejs') %>
+
+  <main class="page">
+    <header class="page-header">
+      <h1>Dog Submission for Adoption</h1>
+      <p class="subtitle">Please fill in all fields. We'll review your submission shortly.</p>
+    </header>
+
+    <% if (successMsg) { %>
+      <div class="alert success"><%= successMsg %></div>
+    <% } %>
+
+    <% if (formError) { %>
+      <div class="alert error"><%= formError %></div>
+    <% } %>
+
+    <form class="submission-form"
+          action="/dog-submission"
+          method="POST"
+          enctype="multipart/form-data"
+          novalidate>
+      <section class="grid">
+
+        <!-- Submitter -->
+        <div class="card">
+          <h2 class="card-title">Submitter Details</h2>
+
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="submitter_full_name" required maxlength="100"
+                   value="<%= values.submitter_full_name || '' %>">
+            <% if (errors.submitter_full_name) { %>
+              <small class="field-error"><%= errors.submitter_full_name %></small>
+            <% } %>
+          </label>
+
+          <label class="field">
+            <span>Phone</span>
+            <input type="text" name="submitter_phone" required maxlength="30"
+                   value="<%= values.submitter_phone || '' %>">
+            <% if (errors.submitter_phone) { %>
+              <small class="field-error"><%= errors.submitter_phone %></small>
+            <% } %>
+          </label>
+
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="submitter_email" required maxlength="120"
+                   value="<%= values.submitter_email || '' %>">
+            <% if (errors.submitter_email) { %>
+              <small class="field-error"><%= errors.submitter_email %></small>
+            <% } %>
+          </label>
+        </div>
+
+        <!-- Dog -->
+        <div class="card">
+          <h2 class="card-title">Dog Details</h2>
+
+          <div class="two">
+            <label class="field">
+              <span>Dog Name</span>
+              <input type="text" name="dog_name" required maxlength="60"
+                     value="<%= values.dog_name || '' %>">
+              <% if (errors.dog_name) { %>
+                <small class="field-error"><%= errors.dog_name %></small>
+              <% } %>
+            </label>
+
+            <label class="field">
+              <span>Age (years)</span>
+              <input type="number" name="dog_age_years" required min="0" max="30" step="0.5"
+                     value="<%= values.dog_age_years || '' %>">
+              <% if (errors.dog_age_years) { %>
+                <small class="field-error"><%= errors.dog_age_years %></small>
+              <% } %>
+            </label>
+          </div>
+
+          <div class="two">
+            <label class="field">
+              <span>Breed / Type</span>
+              <input type="text" name="dog_breed" required maxlength="80"
+                     value="<%= values.dog_breed || '' %>">
+              <% if (errors.dog_breed) { %>
+                <small class="field-error"><%= errors.dog_breed %></small>
+              <% } %>
+            </label>
+
+            <label class="field">
+              <span>Size</span>
+              <select name="dog_size" required>
+                <option value="" disabled <%= !values.dog_size ? 'selected' : '' %>>Select size</option>
+                <option value="Small"  <%= values.dog_size === 'Small' ? 'selected' : '' %>>Small</option>
+                <option value="Medium" <%= values.dog_size === 'Medium' ? 'selected' : '' %>>Medium</option>
+                <option value="Large"  <%= values.dog_size === 'Large' ? 'selected' : '' %>>Large</option>
+                <option value="XL"     <%= values.dog_size === 'XL' ? 'selected' : '' %>>XL</option>
+              </select>
+              <% if (errors.dog_size) { %>
+                <small class="field-error"><%= errors.dog_size %></small>
+              <% } %>
+            </label>
+          </div>
+
+          <div class="two">
+            <label class="field">
+              <span>Gender</span>
+              <select name="dog_gender" required>
+                <option value="" disabled <%= !values.dog_gender ? 'selected' : '' %>>Select gender</option>
+                <option value="Male"   <%= values.dog_gender === 'Male' ? 'selected' : '' %>>Male</option>
+                <option value="Female" <%= values.dog_gender === 'Female' ? 'selected' : '' %>>Female</option>
+              </select>
+              <% if (errors.dog_gender) { %>
+                <small class="field-error"><%= errors.dog_gender %></small>
+              <% } %>
+            </label>
+
+            <label class="field">
+              <span>Preferred Shelter</span>
+              <select name="preferred_shelter_id" required>
+                <option value="" disabled <%= !values.preferred_shelter_id ? 'selected' : '' %>>Select a shelter</option>
+                <% (shelters || []).forEach(s => { %>
+                  <option value="<%= s.shelter_id %>"
+                    <%= String(values.preferred_shelter_id) === String(s.shelter_id) ? 'selected' : '' %>>
+                    <%= s.shelter_name %>
+                  </option>
+                <% }) %>
+              </select>
+              <% if (errors.preferred_shelter_id) { %>
+                <small class="field-error"><%= errors.preferred_shelter_id %></small>
+              <% } %>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Short Description about your dog</span>
+            <textarea name="dog_description" required maxlength="255" rows="4"><%= values.dog_description || '' %></textarea>
+            <small class="hint">Max 255 characters.</small>
+            <% if (errors.dog_description) { %>
+              <small class="field-error"><%= errors.dog_description %></small>
+            <% } %>
+          </label>
+
+          <!-- OPTIONAL IMAGE UPLOAD -->
+          <label class="field">
+            <span>Dog Image (optional)</span>
+            <input
+              type="file"
+              name="dog_image"
+              accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+            />
+            <small class="hint">
+              For best results, please upload a horizontal (landscape) image.<br>
+            Recommended formats: JPG or PNG.
+            </small>
+          </label>
+
+        </div>
+      </section>
+
+      <footer class="actions">
+        <button class="btn primary-btn" type="submit">Submit</button>
+      </footer>
+    </form>
+  </main>
+</body>
+</html>

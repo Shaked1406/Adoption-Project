@@ -1,0 +1,89 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+
+.card {
+  background: #fffaf3;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+.subtitle {
+  margin: 6px 0 16px;
+  opacity: 0.85;
+}
+
+.q {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 14px;
+}
+
+.q-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.opts label {
+  display: block;
+  margin: 8px 0;
+}
+
+.sep {
+  margin: 18px 0;
+  opacity: 0.25;
+}
+
+.h2 {
+  margin: 0 0 10px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.lbl {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.inp {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.18);
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+
+
+.btn.secondary {
+  background: #e9e4dc;
+  color: #2b241f;
+}
+
+.note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}

@@ -1,0 +1,55 @@
+body
+{
+    margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6efe6;color:#2f2a24
+}
+
+.dash-page
+{
+    min-height:100vh;display:grid;place-items: center;padding:24px
+}
+.dash-card
+{
+    width:100%;
+    max-width:720px;
+    background:#fff;
+    border:1px solid #e7dccf;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    padding:22px
+}
+.dash-actions
+{
+    display:grid;
+    gap:12px;
+    margin:16px 0
+}
+.dash-btn
+{
+    display:block;
+    text-align:center;
+    padding:12px 14px;
+    border-radius:12px;
+    background:#7a5a3a;
+    color:#fff;
+    text-decoration:none;
+    font-weight:700
+}
+.dash-btn:hover
+{
+    background:#5f442c
+}
+.logout-btn
+{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #e7dccf;
+    background:#fff;
+    font-weight:700;
+    cursor:pointer
+}
+
+.logout-btn:hover
+{
+    background:#fbf6f0
+}

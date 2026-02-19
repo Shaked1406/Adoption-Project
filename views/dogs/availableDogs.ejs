@@ -1,0 +1,122 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Available Dogs</title>
+<link rel="stylesheet" href="/css/availableDogs.css">
+
+</head>
+<body>
+
+<%- include('../includes/menu.ejs') %>
+
+<%
+  // Safe query object (so the page never crashes)
+  const q = (typeof query !== "undefined" && query) ? query : {};
+
+  const selectedSize = q.size || "";
+  const selectedGender = q.gender || "";
+  const selectedAge = q.age || "";
+%>
+
+<main class="ad-page">
+  <section class="ad-hero">
+    <div class="ad-hero-inner">
+      <h1 class="ad-title">Available Dogs</h1>
+      <p class="ad-subtitle">Dogs currently available for adoption.</p>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="ad-filters">
+    <form
+      id="filtersForm"
+      method="GET"
+      action="/dogs/available-dogs#dogsWrap"
+      class="ad-filter-form"
+    >
+
+      <label class="ad-filter">
+        <span class="ad-filter-label">Size</span>
+        <select name="size">
+          <option value="" <%= selectedSize === "" ? "selected" : "" %>>All Sizes</option>
+          <option value="Small" <%= selectedSize === "Small" ? "selected" : "" %>>Small</option>
+          <option value="Medium" <%= selectedSize === "Medium" ? "selected" : "" %>>Medium</option>
+          <option value="Large" <%= selectedSize === "Large" ? "selected" : "" %>>Large</option>
+        </select>
+      </label>
+
+      <label class="ad-filter">
+        <span class="ad-filter-label">Gender</span>
+        <select name="gender">
+          <option value="" <%= selectedGender === "" ? "selected" : "" %>>All Genders</option>
+          <option value="Male" <%= selectedGender === "Male" ? "selected" : "" %>>Male</option>
+          <option value="Female" <%= selectedGender === "Female" ? "selected" : "" %>>Female</option>
+        </select>
+      </label>
+
+      <label class="ad-filter">
+        <span class="ad-filter-label">Age</span>
+        <select name="age">
+          <option value="" <%= selectedAge === "" ? "selected" : "" %>>All Ages</option>
+          <option value="puppy" <%= selectedAge === "puppy" ? "selected" : "" %>>Puppy (0-1)</option>
+          <option value="young" <%= selectedAge === "young" ? "selected" : "" %>>Young (1-3)</option>
+          <option value="adult" <%= selectedAge === "adult" ? "selected" : "" %>>Adult (3-7)</option>
+          <option value="senior" <%= selectedAge === "senior" ? "selected" : "" %>>Senior (7+)</option>
+        </select>
+      </label>
+
+      <div class="ad-filter-actions">
+        <button class="btn primary-btn" type="submit">Filter</button>
+        <a id="clearFilters" class="btn secondary" href="/dogs/available-dogs#dogsWrap">Clear</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- Results -->
+  <section class="ad-section">
+    <% if (!dogs || dogs.length === 0) { %>
+      <div class="ad-empty">No available dogs right now.</div>
+    <% } else { %>
+      <div id="dogsWrap" class="ad-cards">
+        <% dogs.forEach(dog => { %>
+          <article class="ad-card">
+            <% if (dog.image_url) { %>
+              <div class="ad-img-wrap">
+                <img src="<%= dog.image_url %>" alt="<%= dog.dog_name %>">
+              </div>
+            <% } else { %>
+              <div class="ad-img-wrap"></div>
+            <% } %>
+
+            <h2 class="ad-name"><%= dog.dog_name %></h2>
+
+            <ul class="ad-meta">
+              <li><b>Age:</b> <%= dog.age_years %> years</li>
+              <li><b>Breed:</b> <%= dog.breed %></li>
+              <li><b>Size:</b> <%= dog.size %></li>
+              <li><b>Gender:</b> <%= dog.gender %></li>
+              <li><b>Shelter:</b> <%= dog.shelter_name %></li>
+            </ul>
+
+            <p class="ad-desc"><%= dog.short_description %></p>
+
+            <div class="ad-actions">
+              <a
+                class="btn primary js-adopt"
+                href="/adoption-request?dog_id=<%= dog.dog_id %>"
+                data-dog-id="<%= dog.dog_id %>"
+                data-dog-name="<%= dog.dog_name %>"
+                data-shelter-name="<%= dog.shelter_name %>">
+                Adopt Me
+              </a>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>
+</main>
+
+<script src="/js/availableDogs.jquery.js"></script>
+
+</body>
+</html>

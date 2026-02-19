@@ -1,0 +1,95 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Shelter Adoption Requests</title>
+<link rel="stylesheet" href="/css/shelterRequests.css">
+</head>
+
+<body>
+
+  <%- include('../includes/menu.ejs') %>
+
+  <main class="page">
+    <div class="page-top">
+      <div class="page-headings">
+        <h1>Adoption Requests</h1>
+        <p class="subtitle">Shelter: <%= shelterName %></p>
+      </div>
+
+      <div class="page-actions">
+        <a href="/shelter/dashboard" class="btn approve">Dashboard</a>
+        <a href="/" class="btn approve">Logout</a>
+      </div>
+    </div>
+
+    <% if (flash) { %>
+      <div class="toast" id="toast"><%= flash %></div>
+    <% } %>
+
+    <div class="card">
+      <% if (!requests || requests.length === 0) { %>
+        <p>No adoption requests found for your shelter.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Applicant</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Dog</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% requests.forEach(r => { %>
+              <tr>
+                <td><%= r.full_name %></td>
+                <td><%= r.phone %></td>
+                <td><%= r.email %></td>
+                <td><%= r.dog_name %></td>
+                <td><%= new Date(r.created_at).toLocaleDateString("en-GB") %></td>
+
+                <td>
+                  <% 
+                    // normalize status to match the badge classes you already use
+                    const status = (r.status || 'pending').toLowerCase();
+                  %>
+                  <span class="status <%= status %>"><%= status %></span>
+                </td>
+
+                <td>
+                  <% if (status === 'pending') { %>
+                    <div class="actions">
+                      <form
+                        class="inline"
+                        action="/shelter/adoption-requests/<%= r.request_id %>/approve"
+                        method="POST"
+                        onsubmit="return confirmApprove()"
+                      >
+                        <button class="btn approve" type="submit">Approve</button>
+                      </form>
+
+                      <form
+                        class="inline"
+                        action="/shelter/adoption-requests/<%= r.request_id %>/reject"
+                        method="POST"
+                        onsubmit="return confirmReject()"
+                      >
+                        <button class="btn reject" type="submit">Reject</button>
+                      </form>
+                    </div>
+                  <% } else { %>
+                    —
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>

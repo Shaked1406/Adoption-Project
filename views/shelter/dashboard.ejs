@@ -1,0 +1,25 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Shelter Dashboard</title>
+<link rel="stylesheet" href="/css/shelterDashboard.css">
+</head>
+
+<body>
+<%- include('../includes/menu.ejs') %>
+
+  <main class="dash-page">
+    <section class="dash-card">
+      <h1>Hello, <%= shelterName %></h1>
+
+      <div class="dash-actions">
+        <a class="dash-btn" href="/shelter/adoption-requests">View Adoption Requests</a>
+        <a class="dash-btn" href="/shelter/dog-submissions">View Submission Requests</a>
+      </div>
+
+      <form action="/shelter/logout" method="POST">
+        <button class="logout-btn" type="submit">Logout</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

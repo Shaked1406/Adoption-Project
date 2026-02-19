@@ -1,0 +1,107 @@
+<%- include('../includes/head.ejs') %>
+<title><%= pageTitle %></title>
+<link rel="stylesheet" href="/css/quiz.css">
+</head>
+<body>
+
+<%- include('../includes/menu.ejs') %>
+
+<main class="page">
+  <section class="card">
+    <h1>Dog Quiz</h1>
+    <p class="subtitle">Answer the questions. To save your result, register at the end.</p>
+
+    <form id="quizForm" action="<%= phpSaveUrl %>" method="POST" target="_blank">
+      <div class="q">
+        <div class="q-title">1) Which sense is typically strongest in dogs?</div>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a" required> Sight</label>
+          <label><input type="radio" name="q1" value="b"> Smell</label>
+          <label><input type="radio" name="q1" value="c"> Taste</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title">2) What is a common sign of stress in dogs?</div>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a" required> Excessive yawning / lip licking</label>
+          <label><input type="radio" name="q2" value="b"> Faster hair growth</label>
+          <label><input type="radio" name="q2" value="c"> Blue tongue</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title">3) Which is safest for a dog?</div>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a" required> Chocolate</label>
+          <label><input type="radio" name="q3" value="b"> Grapes</label>
+          <label><input type="radio" name="q3" value="c"> Plain cooked chicken (no bones, no seasoning)</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title">4) A wagging tail ALWAYS means:</div>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a" required> The dog is friendly</label>
+          <label><input type="radio" name="q4" value="b"> The dog is excited/aroused (not always friendly)</label>
+          <label><input type="radio" name="q4" value="c"> The dog wants food</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="q-title">5) Best first step when meeting a new dog?</div>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a" required> Hug it immediately</label>
+          <label><input type="radio" name="q5" value="b"> Let it approach, offer a hand to sniff, stay calm</label>
+          <label><input type="radio" name="q5" value="c"> Run toward it</label>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <h2 class="h2">Save your result</h2>
+
+      <div class="row">
+        <div>
+          <label class="lbl">Full name</label>
+          <input class="inp" type="text" name="full_name" required>
+        </div>
+        <div>
+          <label class="lbl">Email</label>
+          <input class="inp" type="email" name="email" required>
+        </div>
+      </div>
+
+        <div>
+          <label class="lbl">Total questions</label>
+          <input class="inp" type="number" name="total_questions" id="total_questions" value="5" readonly>
+        </div>
+      </div>
+
+      <input type="hidden" name="score" id="score" value="0">
+
+      <div class="actions">
+        <button type="reset" class="btn secondary">Clear</button>
+        <button type="submit" class="btn primary-btn">Submit & Save</button>
+      </div>
+
+      <p class="note">The PHP response will open in a new tab.</p>
+    </form>
+  </section>
+</main>
+
+<script>
+  const answers = { q1: "b", q2: "a", q3: "c", q4: "b", q5: "b" };
+
+  document.getElementById("quizForm").addEventListener("submit", function () {
+    let score = 0;
+    for (const q in answers) {
+      const chosen = document.querySelector(`input[name="${q}"]:checked`);
+      if (chosen && chosen.value === answers[q]) score++;
+    }
+    document.getElementById("score").value = String(score);
+  });
+</script>
+
+</body>
+</html>

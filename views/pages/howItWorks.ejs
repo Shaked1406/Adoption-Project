@@ -1,0 +1,199 @@
+<%- include('../includes/head.ejs') %>
+
+<title>How it works</title>
+<link rel="stylesheet" href="/css/howItWorks.css">
+
+</head>
+<body>
+
+<%- include('../includes/menu.ejs') %>
+
+  <main class="hiw-page">
+
+    <header class="hiw-hero">
+      <div class="hiw-hero-inner">
+        <h1 class="hiw-title">How Adoption Works</h1>
+        <p class="hiw-subtitle">
+          A simple, transparent process - so you know exactly what happens next.
+        </p>
+      </div>
+    </header>
+
+    <section class="hiw-section">
+      <h2 class="hiw-section-title">Step-by-step</h2>
+
+      <div class="hiw-steps">
+        <article class="hiw-card">
+          <div class="hiw-step-badge">1</div>
+          <h3 class="hiw-card-title">Find a dog</h3>
+          <p class="hiw-card-text">
+            Browse available dogs and open a dog profile to learn more about temperament,
+            needs, and compatibility.
+          </p>
+        </article>
+
+        <article class="hiw-card">
+          <div class="hiw-step-badge">2</div>
+          <h3 class="hiw-card-title">Send a request</h3>
+          <p class="hiw-card-text">
+            Fill in a short adoption request form. Share your living situation and experience
+            so we can match you responsibly.
+          </p>
+        </article>
+
+        <article class="hiw-card">
+          <div class="hiw-step-badge">3</div>
+          <h3 class="hiw-card-title">Review & follow-up</h3>
+          <p class="hiw-card-text">
+            The adoption center reviews your request and may contact you for a quick phone call
+            or additional details.
+          </p>
+        </article>
+
+        <article class="hiw-card">
+          <div class="hiw-step-badge">4</div>
+          <h3 class="hiw-card-title">Meet & adopt</h3>
+          <p class="hiw-card-text">
+            If everything fits, you'll schedule a meeting. After approval and signing,
+            you can take your new friend home.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="hiw-section">
+      <h2 class="hiw-section-title">Frequently asked questions</h2>
+
+      <div class="hiw-faq">
+        <details class="hiw-faq-item">
+          <summary>How long does the process take?</summary>
+          <p>Usually 1-7 days, depending on availability and the adoption center’s review time.</p>
+        </details>
+
+        <details class="hiw-faq-item">
+          <summary>Do I need prior experience with dogs?</summary>
+          <p>No - but we may recommend a dog that fits your lifestyle and comfort level.</p>
+        </details>
+
+        <details class="hiw-faq-item">
+          <summary>What happens after I submit a request?</summary>
+          <p>You'll get an on-screen confirmation, and the adoption center will review it and reach out if needed.</p>
+        </details>
+
+        <details class="hiw-faq-item">
+          <summary>Can I adopt if I rent an apartment?</summary>
+          <p>Yes, as long as pets are allowed and the environment is suitable for the dog's needs.</p>
+        </details>
+      </div>
+    </section>
+
+<section class="hiw-section">
+  <h2 class="hiw-section-title">Shelters</h2>
+
+<% const safeShelters = Array.isArray(locals.shelters) ? locals.shelters : []; %>
+
+  <div class="hiw-table-wrap">
+    <table class="hiw-table">
+      <thead>
+        <tr>
+          <th>Shelter Name</th>
+          <th>City</th>
+          <th>Phone</th>
+          <th>H.P</th>
+          <th>Website (optional)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (safeShelters.length === 0) { %>
+          <tr>
+            <td colspan="5" class="hiw-empty">No shelters to display right now.</td>
+          </tr>
+        <% } else { %>
+          <% safeShelters.forEach(s => { %>
+            <tr>
+              <td><%= s.name %></td>
+              <td><%= s.city %></td>
+              <td><%= s.phone %></td>
+              <td><%= s.hp %></td>
+              <td>
+                <% if (s.website) { %>
+                  <a href="<%= s.website %>" target="_blank" rel="noopener">Open</a>
+                <% } else { %>
+                  —
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+    <section class="hiw-cta">
+      <div class="hiw-cta-card">
+        <div>
+          <h2 class="hiw-cta-title">Ready to take the next step?</h2>
+          <p class="hiw-cta-text">
+            Browse dogs or start an adoption request - we'll guide you from there.
+          </p>
+        </div>
+
+        <div class="hiw-cta-actions">
+          <a class="btn primary-btn" href="/dogs/available-dogs">Browse Dogs</a>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="products-section" id="checklist">
+
+  <header class="section-header">
+    <h2>Recommended Products for Your Dog</h2>
+    <p>Carefully selected items to help your dog feel comfortable at home.</p>
+  </header>
+
+  <div class="products-container">
+
+    <article class="product-card">
+      <img src="/images/dog_bed.png" alt="Dog Bed">
+      <h3>Dog Bed</h3>
+      <a
+        class="btn primary-btn"
+        href="https://il.shein.com/goods-p-262467921.html"
+        target="_blank"
+      >
+        View Product
+      </a>
+    </article>
+
+    <article class="product-card">
+      <img src="/images/dog_treats.jpg" alt="Dog Treats">
+      <h3>Healthy Treats</h3>
+      <a
+        class="btn primary-btn"
+        href="https://www.amazon.com/dp/B000I82DTU"
+        target="_blank"
+      >
+        View Product
+      </a>
+    </article>
+
+    <article class="product-card">
+      <img src="/images/dog_harness.jpg" alt="Dog Harness">
+      <h3>Comfort Harness</h3>
+      <a
+        class="btn primary-btn"
+        href="https://www.amazon.com/dp/B01M8JT6FT"
+        target="_blank"
+      >
+        View Product
+      </a>
+    </article>
+
+  </div>
+
+</section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Login</title>
+<link rel="stylesheet" href="/css/shelterAuth.css">
+</head>
+
+<body>
+
+  <%- include('../includes/menu.ejs') %>
+
+  <main class="auth-page">
+    <section class="auth-card">
+      <div class="auth-header">
+        <h1 class="auth-title">Shelter Login</h1>
+        <p class="auth-subtitle">Sign in to access your shelter dashboard.</p>
+      </div>
+
+      <% if (successMsg) { %>
+        <div class="alert success"><%= successMsg %></div>
+      <% } %>
+
+      <% if (formError) { %>
+        <div class="alert error"><%= formError %></div>
+      <% } %>
+
+      <form class="auth-form" action="/shelter/login" method="POST" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value="<%= email %>"
+            placeholder="shelter@example.com"
+            autocomplete="email"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button class="btn primary" type="submit">Login</button>
+
+        <div class="auth-footer">
+          <p>
+            Don’t have an account?
+            <a href="/shelter/register">Create one here</a>
+          </p>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

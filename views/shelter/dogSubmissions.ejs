@@ -1,0 +1,85 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Shelter Dog Submissions</title>
+<link rel="stylesheet" href="/css/shelterDogSubmissions.css">
+</head>
+
+<body>
+
+  <%- include('../includes/menu.ejs') %>
+
+  <main class="page">
+    <div class="page-top">
+      <div class="page-headings">
+        <h1>Dog Submission Requests</h1>
+        <p class="subtitle">Shelter: <%= shelterName %></p>
+      </div>
+
+      <div class="page-actions">
+        <a href="/shelter/dashboard" class="btn approve">Dashboard</a>
+        <a href="/" class="btn approve">Logout</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <% if (!submissions || submissions.length === 0) { %>
+        <p>No dog submission requests yet.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Submitter</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Dog</th>
+              <th>Age</th>
+              <th>Breed</th>
+              <th>Size</th>
+              <th>Gender</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% submissions.forEach(s => { %>
+              <tr>
+                <td><%= s.submitter_full_name %></td>
+                <td><%= s.submitter_phone %></td>
+                <td><%= s.submitter_email %></td>
+                <td><%= s.dog_name %></td>
+                <td><%= s.dog_age_years %></td>
+                <td><%= s.dog_breed %></td>
+                <td><%= s.dog_size %></td>
+                <td><%= s.dog_gender %></td>
+                <td><%= new Date(s.created_at).toLocaleDateString() %></td>
+
+                <td>
+                  <span class="status <%= s.status %>"><%= s.status %></span>
+                </td>
+
+                <td>
+                  <% if (s.status === 'pending') { %>
+                    <div class="actions">
+                      <form method="POST" action="/shelter/dog-submissions/<%= s.submission_id %>/approve">
+                        <button class="btn approve">Approve</button>
+                      </form>
+                      <form method="POST" action="/shelter/dog-submissions/<%= s.submission_id %>/reject">
+                        <button class="btn reject">Reject</button>
+                      </form>
+                    </div>
+                  <% } else { %>
+                    —
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </main>
+
+</body>
+</html>

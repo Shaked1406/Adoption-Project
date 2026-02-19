@@ -1,0 +1,17 @@
+<%- include('../includes/head.ejs') %>
+
+<title>Error - 404</title>
+<link rel="stylesheet" href="/css/error.css">
+
+</head>
+<body>
+
+<%- include('../includes/menu.ejs') %>
+
+  <main style="max-width: 900px; margin: 0 auto; padding: 24px;">
+    <h1>Something went wrong</h1>
+<p><%= (typeof message !== "undefined" && message) ? message : "An unexpected error occurred." %></p>
+
+  </main>
+</body>
+</html>
