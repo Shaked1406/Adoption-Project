@@ -168,13 +168,28 @@
   }
 
   // JS validation #2: Israel phone
-  function validateILPhone(raw) {
-    const digits = String(raw || "").replace(/[^\d]/g, "");
-    if (digits.length < 9 || digits.length > 10) return { ok: false, normalized: digits, msg: "Phone must be 9–10 digits (Israel format)." };
-    if (!digits.startsWith("0")) return { ok: false, normalized: digits, msg: "Phone must start with 0 (Israel format)." };
-    if (digits.startsWith("05") && digits.length !== 10) return { ok: false, normalized: digits, msg: "Mobile phone starting with 05 must be exactly 10 digits." };
-    return { ok: true, normalized: digits, msg: "" };
+function validateILPhone(raw) {
+  const val = String(raw || "").trim();
+
+  // digits only
+  if (!/^\d+$/.test(val)) {
+    return { ok: false, normalized: val, msg: "Phone must contain digits only (no letters or symbols)." };
   }
+
+  if (val.length < 9 || val.length > 10) {
+    return { ok: false, normalized: val, msg: "Phone must be 9–10 digits (Israel format)." };
+  }
+
+  if (!val.startsWith("0")) {
+    return { ok: false, normalized: val, msg: "Phone must start with 0 (Israel format)." };
+  }
+
+  if (val.startsWith("05") && val.length !== 10) {
+    return { ok: false, normalized: val, msg: "Mobile phone starting with 05 must be exactly 10 digits." };
+  }
+
+  return { ok: true, normalized: val, msg: "" };
+}
 
   // JS validation #3: Age
   function validateAge(val) {
