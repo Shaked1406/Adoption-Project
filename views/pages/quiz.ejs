@@ -9,9 +9,10 @@
 <main class="page">
   <section class="card">
     <h1>Dog Quiz</h1>
-    <p class="subtitle">Answer the questions. To save your result, register at the end.</p>
+    <p class="subtitle">You must answer all questions. To save your result, register at the end.</p>
 
     <form id="quizForm" action="<%= phpSaveUrl %>" method="POST" target="_blank">
+      <!-- Q1 -->
       <div class="q">
         <div class="q-title">1) Which sense is typically strongest in dogs?</div>
         <div class="opts">
@@ -21,6 +22,7 @@
         </div>
       </div>
 
+      <!-- Q2 -->
       <div class="q">
         <div class="q-title">2) What is a common sign of stress in dogs?</div>
         <div class="opts">
@@ -30,6 +32,7 @@
         </div>
       </div>
 
+      <!-- Q3 -->
       <div class="q">
         <div class="q-title">3) Which is safest for a dog?</div>
         <div class="opts">
@@ -39,6 +42,7 @@
         </div>
       </div>
 
+      <!-- Q4 -->
       <div class="q">
         <div class="q-title">4) A wagging tail ALWAYS means:</div>
         <div class="opts">
@@ -48,6 +52,7 @@
         </div>
       </div>
 
+      <!-- Q5 -->
       <div class="q">
         <div class="q-title">5) Best first step when meeting a new dog?</div>
         <div class="opts">
@@ -61,17 +66,65 @@
 
       <h2 class="h2">Save your result</h2>
 
+      <!-- Error box (shown by JS) -->
+      <div id="clientError" class="alert error" style="display:none;"></div>
+
       <div class="row">
         <div>
-          <label class="lbl">Full name</label>
-          <input class="inp" type="text" name="full_name" required>
+          <label class="lbl">Name</label>
+          <input
+            class="inp"
+            type="text"
+            name="full_name"
+            id="full_name"
+            required
+            minlength="2"
+            maxlength="60"
+            autocomplete="name"
+          >
+          <small class="note">Letters only (Hebrew/English), spaces, ' and -</small>
         </div>
+
         <div>
           <label class="lbl">Email</label>
-          <input class="inp" type="email" name="email" required>
+        <input class="inp" type="email" name="email" id="email" required maxlength="120" autocomplete="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$" title="Email must be like name@example.com">
         </div>
       </div>
 
+      <div class="row">
+        <div>
+          <label class="lbl">Phone (Israel)</label>
+          <input class="inp" type="text" name="phone" id="phone" placeholder="05XXXXXXXX" inputmode="numeric" autocomplete="tel" required>
+          <small class="note">Example: 0521234567 (digits only)</small>
+        </div>
+
+        <div>
+          <label class="lbl">Age</label>
+          <input class="inp" type="number" name="age" id="age" min="12" max="120" step="1" required>
+          <small class="note">Allowed: 12–120 (whole number)</small>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label class="lbl">Dog experience level</label>
+          <select class="inp" name="experience_level" id="experience_level" required>
+            <option value="">Select...</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+
+        <div style="display:flex; align-items:flex-end;">
+          <label class="lbl" style="display:flex; gap:10px; align-items:center; margin:0;">
+            <input type="checkbox" name="consent" id="consent" value="1" required>
+            I confirm the details are correct and I agree to save my score.
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
         <div>
           <label class="lbl">Total questions</label>
           <input class="inp" type="number" name="total_questions" id="total_questions" value="5" readonly>
@@ -81,7 +134,7 @@
       <input type="hidden" name="score" id="score" value="0">
 
       <div class="actions">
-        <button type="reset" class="btn secondary">Clear</button>
+        <button type="reset" class="btn secondary" id="btnClear">Clear</button>
         <button type="submit" class="btn primary-btn">Submit & Save</button>
       </div>
 
@@ -93,14 +146,114 @@
 <script>
   const answers = { q1: "b", q2: "a", q3: "c", q4: "b", q5: "b" };
 
-  document.getElementById("quizForm").addEventListener("submit", function () {
+  function showClientError(msg) {
+    const box = document.getElementById("clientError");
+    box.textContent = msg;
+    box.style.display = "block";
+  }
+
+  function clearClientError() {
+    const box = document.getElementById("clientError");
+    box.textContent = "";
+    box.style.display = "none";
+  }
+
+  // JS validation #1: Name must be letters only (Hebrew/English), spaces, ' and -
+  function validateName(raw) {
+    const val = String(raw || "").trim();
+    const re = /^[A-Za-z\u0590-\u05FF\s'-]+$/;
+    if (val.length < 2 || val.length > 60) return { ok: false, msg: "Name must be 2–60 characters." };
+    if (!re.test(val)) return { ok: false, msg: "Name must contain letters only (Hebrew/English), spaces, ' or -." };
+    return { ok: true, normalized: val, msg: "" };
+  }
+
+  // JS validation #2: Israel phone
+  function validateILPhone(raw) {
+    const digits = String(raw || "").replace(/[^\d]/g, "");
+    if (digits.length < 9 || digits.length > 10) return { ok: false, normalized: digits, msg: "Phone must be 9–10 digits (Israel format)." };
+    if (!digits.startsWith("0")) return { ok: false, normalized: digits, msg: "Phone must start with 0 (Israel format)." };
+    if (digits.startsWith("05") && digits.length !== 10) return { ok: false, normalized: digits, msg: "Mobile phone starting with 05 must be exactly 10 digits." };
+    return { ok: true, normalized: digits, msg: "" };
+  }
+
+  // JS validation #3: Age
+  function validateAge(val) {
+    const n = Number(val);
+    if (!Number.isFinite(n) || !Number.isInteger(n)) return { ok: false, msg: "Age must be a whole number." };
+    if (n < 12 || n > 120) return { ok: false, msg: "Age must be between 12 and 120." };
+    return { ok: true, msg: "" };
+  }
+
+  document.getElementById("quizForm").addEventListener("submit", function (e) {
+    clearClientError();
+
+    // A) Browser validation FIRST (stops invalid email/required/select/checkbox)
+    if (!this.checkValidity()) {
+      e.preventDefault();
+      this.reportValidity();
+      return;
+    }
+
+    // B) Ensure all quiz questions answered (extra safety + nicer message)
+    for (const q in answers) {
+      const chosen = document.querySelector(`input[name="${q}"]:checked`);
+      if (!chosen) {
+        e.preventDefault();
+        showClientError("Please answer all quiz questions (1–5) before saving.");
+        const firstOption = document.querySelector(`input[name="${q}"]`);
+        if (firstOption) {
+          const qBox = firstOption.closest(".q");
+          if (qBox) qBox.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstOption.focus();
+        }
+        return;
+      }
+    }
+
+    // C) Custom JS validations (Name, Phone, Age)
+    const nameInput = document.getElementById("full_name");
+    const phoneInput = document.getElementById("phone");
+    const ageInput = document.getElementById("age");
+
+    const nameRes = validateName(nameInput.value);
+    if (!nameRes.ok) {
+      e.preventDefault();
+      showClientError(nameRes.msg);
+      nameInput.focus();
+      return;
+    }
+    nameInput.value = nameRes.normalized;
+
+    const phoneRes = validateILPhone(phoneInput.value);
+    if (!phoneRes.ok) {
+      e.preventDefault();
+      showClientError(phoneRes.msg);
+      phoneInput.focus();
+      return;
+    }
+    phoneInput.value = phoneRes.normalized;
+
+    const ageRes = validateAge(ageInput.value);
+    if (!ageRes.ok) {
+      e.preventDefault();
+      showClientError(ageRes.msg);
+      ageInput.focus();
+      return;
+    }
+
+    // D) Calculate score
     let score = 0;
     for (const q in answers) {
       const chosen = document.querySelector(`input[name="${q}"]:checked`);
       if (chosen && chosen.value === answers[q]) score++;
     }
     document.getElementById("score").value = String(score);
+
+    // If we reach here - form will submit.
   });
+
+  // Optional: clear error box on reset
+  document.getElementById("btnClear").addEventListener("click", clearClientError);
 </script>
 
 </body>
